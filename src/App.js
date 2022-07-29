@@ -1,25 +1,52 @@
-import logo from './logo.svg';
+import { useState } from 'react';
 import './App.css';
+import Todoitem from './components/Todoitem/Todoitem';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+	const [array, setArray] = useState([]);
+	const [newValue, setValue] = useState();
 
+	function submit(e) {
+		e.preventDefault();
+		setArray([...array, newValue]);
+
+		const elInput = e.target.firstChild;
+		elInput.value = '';
+	}
+
+	function change(evt) {
+		setValue({
+			name: evt.target.value,
+			id: array.length + 1,
+		});
+	}
+
+	function dalete(evt) {
+		const dataID = evt.target.dataset.id;
+		setArray(array.filter((e) => e.id != dataID));
+	}
+
+	return (
+		<div>
+			<form method='post' onSubmit={submit}>
+				<input
+					name='todoinput'
+					onChange={change}
+					placeholder='kriting'
+					aria-label='bajariladigan ish '
+				/>
+				<button type='submit'>create</button>
+			</form>
+
+			<ul>
+				{array.map((element) => (
+					<Todoitem element={element} 
+          dalete = {dalete}
+          />
+
+				))}
+			</ul>
+		</div>
+	);
+}
 export default App;
